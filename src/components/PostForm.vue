@@ -2,7 +2,7 @@
   <div>
     <h2>Создание поста</h2>
     <from class="form" @submit.prevent>
-      <input
+      <MyInput
         @input="titleInput"
         v-bind:value="post.title"
         name="title"
@@ -11,21 +11,25 @@
         placeholder="Название"
       />
       <!-- двухсторонее связывание можно реализовать как выше, используя слушатель @input и v-bind:value или использовать v-model, как ниже -->
-      <input
+      <MyInput
         v-model="post.body"
         name="body"
         class="input"
         type="text"
         placeholder="Описание"
       />
-      <button class="btn" @click="createPost">Создать</button>
+      <MyButton class="btn" @click="createPost">Создать</MyButton>
     </from>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import MyButton from '@/components/UI/MyButton.vue';
 
 export default defineComponent({
+  components: {
+    MyButton
+  },
   data(): { post: { title: string; body: string; id?: string | number } } {
     return {
       post: {
@@ -50,7 +54,7 @@ export default defineComponent({
   }
 });
 </script>
-<style>
+<style scoped>
 .form {
   display: flex;
   flex-direction: column;
@@ -58,17 +62,7 @@ export default defineComponent({
   margin-top: 15px;
 }
 
-.input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--teal-color);
-}
-
 .btn {
   align-self: end;
-  padding: 10px 15px;
-  background: none;
-  color: var(--teal-color);
-  border: 1px solid var(--teal-color);
 }
 </style>

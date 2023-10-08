@@ -1,9 +1,9 @@
 <template>
   <div>
     <!-- Объявление директивы клика -->
-    <button v-on:click="addLike">like</button>
+    <MyButton v-on:click="addLike">like</MyButton>
     <!-- запись с @ аналогично записи выше -->
-    <button @click="removeLike">dislike</button>
+    <MyButton @click="removeLike">dislike</MyButton>
     <div>Количество лайков {{ likes }}</div>
   </div>
 </template>
