@@ -3,7 +3,7 @@
     <MyCounter />
     <PostForm @createPost="createPost" />
     <!-- Короткая запись v-bind:posts - :posts -->
-    <PostList v-bind:posts="posts" />
+    <PostList v-bind:posts="posts" @remove="removePost" />
   </div>
 </template>
 
@@ -39,6 +39,9 @@ export default defineComponent({
   methods: {
     createPost(post: IPost) {
       this.posts.push(post);
+    },
+    removePost(post: IPost) {
+      this.posts = this.posts?.filter((p) => p.id !== post.id);
     }
   }
 });
