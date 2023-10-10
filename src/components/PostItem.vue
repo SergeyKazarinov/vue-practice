@@ -30,7 +30,4 @@ export default defineComponent({
   align-items: center;
   justify-content: space-between;
 }
-
-.post__btns {
-}
 </style>
