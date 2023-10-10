@@ -2,12 +2,17 @@
   <div>
     <MyCounter />
     <h1>Страница с постами</h1>
+    <MyInput v-model="searchQuery" :placeholder="'Поиск'" />
     <div class="app__btns">
       <MyButton @click="showDialog">Создать пост</MyButton>
       <MySelect v-model="selectedSort" :options="sortOptions" />
     </div>
     <!-- Короткая запись v-bind:posts - :posts -->
-    <PostList v-if="!isPostLoading" v-bind:posts="posts" @remove="removePost" />
+    <PostList
+      v-if="!isPostLoading"
+      v-bind:posts="sortedAndSearchedPosts"
+      @remove="removePost"
+    />
     <div v-else>Идет загрузка...</div>
     <MyDialog v-model:show="dialogVisible">
       <PostForm @createPost="createPost" />
@@ -41,6 +46,7 @@ interface IAppData {
   isPostLoading: boolean;
   selectedSort: TSelectedSort | '';
   sortOptions: IOption[];
+  searchQuery: string;
 }
 
 export default defineComponent({
@@ -54,6 +60,7 @@ export default defineComponent({
       posts: [],
       dialogVisible: false,
       isPostLoading: false,
+      searchQuery: '',
       selectedSort: '',
       sortOptions: [
         { value: 'title', name: 'По названию' },
@@ -93,9 +100,15 @@ export default defineComponent({
   watch: {
     // имя функции должно быть таким же, как и название свойства в data
     selectedSort(newValue: TSelectedSort) {
-      this.posts.sort(
-        (post1, post2) => post1[newValue]?.localeCompare(post2[newValue])
-      );
+      // this.posts.sort(
+      //   (post1, post2) => post1[newValue]?.localeCompare(post2[newValue])
+      // );
+    },
+    // этот способ изменяет стейт постов, для корректной работы необходимо создавать отдельный стейт. Лучше использовать computed свойство, т.к. он не изменяет стейт, а вовзращает новый массив
+    searchQuery(value: string) {
+      // this.posts = this.posts.filter((post) =>
+      // post.title.toLowerCase().includes(value.toLowerCase())
+      // );
     }
   },
   // либо использовать computed свойство для сортировке. Тогда sortedPosts необходимо забиндить в postList вместо posts
@@ -106,6 +119,11 @@ export default defineComponent({
           post1[this.selectedSort as TSelectedSort]?.localeCompare(
             post2[this.selectedSort as TSelectedSort]
           )
+      );
+    },
+    sortedAndSearchedPosts() {
+      return this.sortedPosts.filter((post) =>
+        post.title.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     }
   }
