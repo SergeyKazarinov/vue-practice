@@ -13,13 +13,15 @@ export default defineComponent({
   methods: {
     updateInput(event: Event) {
       const element = event.target as HTMLInputElement;
+      // Используется двухсторонне связывание без именования. В этом случае используется modelValue (именнованное было бы так update:value)
+      // в родителе используется v-model
       this.$emit('update:modelValue', element.value);
     }
   }
 });
 </script>
 
-<style>
+<style scoped>
 .input {
   width: 100%;
   padding: 10px;

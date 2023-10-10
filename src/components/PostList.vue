@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="posts && posts?.length > 0">
     <h3>Список постов</h3>
     <PostItem
       :post="post"
@@ -8,6 +8,7 @@
       @remove="$emit('remove', post)"
     />
   </div>
+  <h2 v-else class="title">Список постов пустой</h2>
 </template>
 
 <script lang="ts">
@@ -26,4 +27,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.title {
+  color: red;
+}
+</style>
