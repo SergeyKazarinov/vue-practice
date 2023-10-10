@@ -25,6 +25,7 @@
         {{ page }}
       </div>
     </div>
+    <div ref="observer" style="height: 30px"></div>
     <MyDialog v-model:show="dialogVisible">
       <PostForm @createPost="createPost" />
     </MyDialog>
@@ -121,10 +122,40 @@ export default defineComponent({
       } finally {
         this.isPostLoading = false;
       }
+    },
+    async loadMorePosts() {
+      try {
+        this.pageNumber += 1;
+        const result = await axios.get(
+          'https://jsonplaceholder.typicode.com/posts',
+          {
+            params: {
+              _page: this.pageNumber,
+              _limit: this.limit
+            }
+          }
+        );
+        this.posts = [...this.posts, ...result.data];
+      } catch (e) {
+        console.log(e);
+      }
     }
   },
   mounted() {
     this.fetchPosts();
+    const options = {
+      rootMargin: '0px',
+      threshold: 1.0
+    };
+
+    const callback = (entries: IntersectionObserverEntry[]) => {
+      if (entries[0].isIntersecting && this.pageNumber < this.totalPage) {
+        this.loadMorePosts();
+      }
+    };
+    const observer = new IntersectionObserver(callback, options);
+
+    observer.observe(this.$refs.observer as Element);
   },
   watch: {
     // имя функции должно быть таким же, как и название свойства в data
@@ -138,10 +169,11 @@ export default defineComponent({
       // this.posts = this.posts.filter((post) =>
       // post.title.toLowerCase().includes(value.toLowerCase())
       // );
-    },
-    pageNumber() {
-      this.fetchPosts();
     }
+    // для пагинации постраничной
+    // pageNumber() {
+    //   this.fetchPosts();
+    // }
   },
   // либо использовать computed свойство для сортировке. Тогда sortedPosts необходимо забиндить в postList вместо posts
   computed: {
