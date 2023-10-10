@@ -14,6 +14,17 @@
       @remove="removePost"
     />
     <div v-else>Идет загрузка...</div>
+    <div class="page__wrapper">
+      <div
+        class="page"
+        v-for="page in totalPage"
+        :key="page"
+        :class="{ page_active: page === pageNumber }"
+        @click="changePage(page)"
+      >
+        {{ page }}
+      </div>
+    </div>
     <MyDialog v-model:show="dialogVisible">
       <PostForm @createPost="createPost" />
     </MyDialog>
@@ -46,6 +57,9 @@ interface IAppData {
   isPostLoading: boolean;
   selectedSort: TSelectedSort | '';
   sortOptions: IOption[];
+  pageNumber: number;
+  limit: number;
+  totalPage: number;
   searchQuery: string;
 }
 
@@ -60,6 +74,9 @@ export default defineComponent({
       posts: [],
       dialogVisible: false,
       isPostLoading: false,
+      pageNumber: 1,
+      limit: 10,
+      totalPage: 0,
       searchQuery: '',
       selectedSort: '',
       sortOptions: [
@@ -79,11 +96,23 @@ export default defineComponent({
     showDialog() {
       this.dialogVisible = true;
     },
+    changePage(pageNumber: number) {
+      this.pageNumber = pageNumber;
+    },
     async fetchPosts() {
       try {
         this.isPostLoading = true;
         const result = await axios.get(
-          'https://jsonplaceholder.typicode.com/posts?_limit=10'
+          'https://jsonplaceholder.typicode.com/posts',
+          {
+            params: {
+              _page: this.pageNumber,
+              _limit: this.limit
+            }
+          }
+        );
+        this.totalPage = Math.ceil(
+          result.headers['x-total-count'] / this.limit
         );
 
         this.posts = result.data;
@@ -109,6 +138,9 @@ export default defineComponent({
       // this.posts = this.posts.filter((post) =>
       // post.title.toLowerCase().includes(value.toLowerCase())
       // );
+    },
+    pageNumber() {
+      this.fetchPosts();
     }
   },
   // либо использовать computed свойство для сортировке. Тогда sortedPosts необходимо забиндить в postList вместо posts
@@ -130,7 +162,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss">
 * {
   margin: 0;
   padding: 0;
@@ -149,5 +181,24 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   margin: 15px 0;
+}
+
+.page__wrapper {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.page {
+  border: 1px solid black;
+  padding: 10px;
+
+  &_active {
+    border: 2px solid var(--teal-color);
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 </style>

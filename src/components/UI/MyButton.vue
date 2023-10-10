@@ -10,11 +10,15 @@ export default defineComponent({
   name: 'MyButton'
 });
 </script>
-<style scoped>
+<style scoped lang="scss">
 .btn {
   padding: 10px 15px;
   background: none;
   color: var(--teal-color);
   border: 1px solid var(--teal-color);
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 </style>
