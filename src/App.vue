@@ -2,7 +2,10 @@
   <div>
     <MyCounter />
     <h1>Страница с постами</h1>
-    <MyButton class="createBtn" @click="showDialog">Создать пост</MyButton>
+    <div class="app__btns">
+      <MyButton @click="showDialog">Создать пост</MyButton>
+      <MySelect v-model="selectedSort" :options="sortOptions" />
+    </div>
     <!-- Короткая запись v-bind:posts - :posts -->
     <PostList v-if="!isPostLoading" v-bind:posts="posts" @remove="removePost" />
     <div v-else>Идет загрузка...</div>
@@ -25,10 +28,19 @@ export interface IPost {
   body: string;
 }
 
+export interface IOption {
+  value: string;
+  name: string;
+}
+
+type TSelectedSort = keyof Omit<IPost, 'id'>;
+
 interface IAppData {
   posts: IPost[];
   dialogVisible: boolean;
   isPostLoading: boolean;
+  selectedSort: TSelectedSort | '';
+  sortOptions: IOption[];
 }
 
 export default defineComponent({
@@ -41,7 +53,12 @@ export default defineComponent({
     return {
       posts: [],
       dialogVisible: false,
-      isPostLoading: false
+      isPostLoading: false,
+      selectedSort: '',
+      sortOptions: [
+        { value: 'title', name: 'По названию' },
+        { value: 'body', name: 'По описанию' }
+      ]
     };
   },
   methods: {
@@ -72,6 +89,25 @@ export default defineComponent({
   },
   mounted() {
     this.fetchPosts();
+  },
+  watch: {
+    // имя функции должно быть таким же, как и название свойства в data
+    selectedSort(newValue: TSelectedSort) {
+      this.posts.sort(
+        (post1, post2) => post1[newValue]?.localeCompare(post2[newValue])
+      );
+    }
+  },
+  // либо использовать computed свойство для сортировке. Тогда sortedPosts необходимо забиндить в postList вместо posts
+  computed: {
+    sortedPosts() {
+      return [...this.posts].sort(
+        (post1, post2) =>
+          post1[this.selectedSort as TSelectedSort]?.localeCompare(
+            post2[this.selectedSort as TSelectedSort]
+          )
+      );
+    }
   }
 });
 </script>
@@ -91,7 +127,9 @@ export default defineComponent({
   padding: 20px;
 }
 
-.createBtn {
+.app__btns {
+  display: flex;
+  justify-content: space-between;
   margin: 15px 0;
 }
 </style>

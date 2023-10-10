@@ -51,6 +51,15 @@ export default defineComponent({
         body: ''
       };
     }
+  },
+  // Отслеживание изменения объекта. Чтобы отследить изменение каждого поля объекта используется функция handler и свойство deep
+  watch: {
+    post: {
+      handler(newVal) {
+        console.log(newVal);
+      },
+      deep: true
+    }
   }
 });
 </script>
