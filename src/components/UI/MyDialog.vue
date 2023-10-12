@@ -7,22 +7,24 @@
 </template>
 
 <script lang="ts">
+import toggleMixin from '@/mixins/toggleMixin';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'MyDialog',
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
-  methods: {
-    hideDialog() {
-      // двухсторонее связывание именнованное - у родителя используется v-model:show
-      this.$emit('update:show', false);
-    }
-  }
+  mixins: [toggleMixin] // закоментированный код ниже заменяет данный миксин
+  // props: {
+  //   show: {
+  //     type: Boolean,
+  //     default: false
+  //   }
+  // },
+  // methods: {
+  //   hideDialog() {
+  //     // двухсторонее связывание именнованное - у родителя используется v-model:show
+  //     this.$emit('update:show', false);
+  //   }
+  // }
 });
 </script>
 
