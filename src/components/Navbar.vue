@@ -15,7 +15,7 @@ export default defineComponent({});
 <style scoped>
 .navbar {
   height: 50px;
-  background-color: gray;
+  background-color: rgba(180, 178, 178, 0.4);
   box-shadow: 2px 2px 4px gray;
   display: flex;
   align-items: center;

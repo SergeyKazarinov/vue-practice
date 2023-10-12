@@ -3,6 +3,7 @@
     <h2>Создание поста</h2>
     <from class="form" @submit.prevent>
       <MyInput
+        v-focus
         @input="titleInput"
         v-bind:value="post.title"
         name="title"

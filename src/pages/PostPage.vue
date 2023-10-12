@@ -25,7 +25,11 @@
         {{ page }}
       </div>
     </div>
-    <div ref="observer" style="height: 30px"></div>
+    <div
+      v-intersection="loadMorePosts"
+      ref="observer"
+      style="height: 30px"
+    ></div>
     <MyDialog v-model:show="dialogVisible">
       <PostForm @createPost="createPost" />
     </MyDialog>
@@ -143,19 +147,6 @@ export default defineComponent({
   },
   mounted() {
     this.fetchPosts();
-    const options = {
-      rootMargin: '0px',
-      threshold: 1.0
-    };
-
-    const callback = (entries: IntersectionObserverEntry[]) => {
-      if (entries[0].isIntersecting && this.pageNumber < this.totalPage) {
-        this.loadMorePosts();
-      }
-    };
-    const observer = new IntersectionObserver(callback, options);
-
-    observer.observe(this.$refs.observer as Element);
   },
   watch: {
     // имя функции должно быть таким же, как и название свойства в data
