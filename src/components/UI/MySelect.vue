@@ -1,5 +1,5 @@
 <template>
-  <select :value="modelValue" @change="changeOptions">
+  <select class="select" :value="modelValue" @change="changeOptions">
     <option disabled value="">Выберите тип сортировки</option>
     <option v-for="option in options" :key="option.value" :value="option.value">
       {{ option.name }}
@@ -7,7 +7,7 @@
   </select>
 </template>
 <script lang="ts">
-import type { IOption } from '@/App.vue';
+import type { IOption } from '@/pages/PostPage.vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -31,4 +31,10 @@ export default defineComponent({
   }
 });
 </script>
-<style scoped></style>
+<style scoped>
+.select {
+  border-radius: 10px;
+  border: 1px solid var(--teal-color);
+  color: var(--teal-color);
+}
+</style>

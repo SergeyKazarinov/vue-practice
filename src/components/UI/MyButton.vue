@@ -16,6 +16,7 @@ export default defineComponent({
   background: none;
   color: var(--teal-color);
   border: 1px solid var(--teal-color);
+  border-radius: 10px;
 
   &:hover {
     cursor: pointer;
