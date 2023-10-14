@@ -3,6 +3,7 @@ import MainPage from '../pages/MainPage.vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import PostPage from '@/pages/PostPage.vue';
 import PostItemPage from '@/pages/PostItemPage.vue';
+import PostPageWithStore from '@/pages/PostPageWithStore.vue';
 
 interface IRoute {
   path: string;
@@ -17,6 +18,10 @@ const routes: IRoute[] = [
   {
     path: '/posts',
     component: PostPage
+  },
+  {
+    path: '/store',
+    component: PostPageWithStore
   },
   {
     path: '/posts/:id',
